@@ -1,0 +1,41 @@
+{% extends 'events/base.html' %}
+
+{% block title %}{{ event.name }} - Мероприятие{% endblock %}
+
+{% block content %}
+<div class="event_detail">
+    <h1>{{ event.name }}</h1>
+      <!-- БЛОК ДЛЯ СООБЩЕНИЙ -->
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+    <div class="event_description">
+        <h2>Описание мероприятия:</h2>
+        <p>{{ event.description|linebreaks }}</p>
+    </div>
+    
+    <div class="event_organizer">
+        <p><strong>Организатор:</strong> {{ event.organizer.get_full_name|default:event.organizer.username }}</p>
+    </div>
+{% if user.is_authenticated %}
+    <form method="post" action="{% url 'event_participate' event.id %}">
+        {% csrf_token %}
+        {% if event.is_user_participating %}
+            <button type="button" class="btn btn-secondary" disabled>Вы уже записаны</button>
+        {% else %}
+            <button type="submit" class="btn btn-primary">Записаться на событие</button>
+        {% endif %}
+    </form>
+{% else %}
+    <a href="{% url 'login' %}?next={{ request.path }}" class="btn btn-primary">
+        Войдите, чтобы записаться
+    </a>
+{% endif %}
+{% endblock %}
