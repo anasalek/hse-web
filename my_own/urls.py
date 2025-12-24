@@ -22,8 +22,7 @@ from django.views.generic import TemplateView
 urlpatterns = [
     path('admin/', admin.site.urls),
     #path('', TemplateView.as_view(template_name='base.html'), name='home'),
-    path('', include('Events.urls'))
-    #path('', include('user_app.urls')), это потом для страницы регистрации
-    #path('api-auth', include('rest_framework.urls') # для апи
-    #path('api', include('api.urls'))
+    path('', include('Events.urls')),
+    path('api-auth/', include('rest_framework.urls')), # для апи
+    path('api/', include('rest.urls')),
 ]

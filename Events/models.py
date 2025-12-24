@@ -1,18 +1,20 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class Event(models.Model):
     '''Мероприятие'''
 
     name = models.CharField(verbose_name="Название мероприятия", unique=True, max_length=200)
     description = models.TextField(
-        help_text="Описание мероприятия"
+        verbose_name="Описание мероприятия"
     )
     # поля со связями
     organizer = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         blank=True,
+        null=True,
         related_name='organized_events',
         help_text="Организатор этого мероприятия"
     )
@@ -24,7 +26,7 @@ class Event(models.Model):
         related_name='participanting_events',
         help_text="Мероприятие, в котором участвует пользователь"
     )
-    
+
     def is_user_participating(self, user=None):
         """Проверяет, записан ли пользователь на событие"""
         if user and not user.is_authenticated:
