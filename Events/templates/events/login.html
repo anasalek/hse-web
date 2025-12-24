@@ -1,0 +1,17 @@
+{% extends 'events/base.html' %}
+
+{% block title %}
+<header class="page-title">
+    <h1>Вход</h1>
+</header>
+{% endblock %}
+
+
+{% block content %}
+    <h2>Sign Page</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Войти</button>
+    </form>
+{% endblock content %}

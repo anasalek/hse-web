@@ -1,8 +1,8 @@
 {% extends 'events/base.html' %}
 
 {% block title %}Создать мероприятие{% endblock %}
-
 {% block content %}
+{% if user.is_authenticated %}
 <h1>Создать новое мероприятие</h1>
 
 <form method="post">
@@ -10,6 +10,8 @@
     {{ form.as_p }}
     <button type="submit">Создать</button>
 </form>
-
+{% else %}
+<a href="{% url 'login' %}">Зарегестрируйтесь, чтобы создать событие</a>
+{% endif %}
 <a href="{% url 'event_list' %}">Отмена</a>
 {% endblock %}

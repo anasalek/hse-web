@@ -10,11 +10,11 @@ from django.views.generic import (
     UpdateView,
     DeleteView
 )
-
-# Create your views here.
-
 from .models import Event, Participation
 from Events.forms import EventForm
+from .forms import SignUpForm
+from django.contrib.auth.views import LoginView, LogoutView
+
 
 class EventCreateView(CreateView):
     """Создание нового события"""
@@ -49,7 +49,7 @@ class EventUpdateView(UpdateView):
     context_object_name = "event"
     pk_url_kwarg = "id"
     template_name_suffix = "_update"
-    success_url = reverse_lazy("event_list")
+    success_url = reverse_lazy("events/event_list")
 
 class EventDeleteView(DeleteView):
     """Удаление события"""
@@ -58,13 +58,13 @@ class EventDeleteView(DeleteView):
     context_object_name = "event"
     pk_url_kwarg = "id"
     template_name_suffix = "_delete"
-    success_url = reverse_lazy("event_list")
+    success_url = reverse_lazy("events/event_list")
 
     
 class EventParticipateView(LoginRequiredMixin, View):
     """Запись на событие"""
-    login_url = reverse_lazy('login')  # здесь не забудь URL для входа
-    success_url = reverse_lazy('event_list')
+    login_url = reverse_lazy('/login')  # если не залогинились, редирект на страницу входа
+    success_url = reverse_lazy('events/event_list') # если вошли в аккаунт, редирект на список мероприятий
     
     def post(self, request, id):
         event = get_object_or_404(Event, id=id)
@@ -81,3 +81,9 @@ class EventParticipateView(LoginRequiredMixin, View):
             messages.info(request, f'Вы уже записаны на событие "{event.name}"')
         
         return redirect('event_detail', id=event.id)
+    
+class SignUpView(CreateView):
+        '''Зарегестрироваться'''
+        form_class = SignUpForm
+        success_url = reverse_lazy('/login') # при успешной регистрации редирект на логин
+        template_name = '/signup.html' # здесь не уверена в пути
